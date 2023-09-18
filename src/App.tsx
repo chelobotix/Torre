@@ -1,5 +1,11 @@
+import AppRouter from './routes/AppRouter'
+
 function App(): JSX.Element {
-    return <>dsd</>
+    return (
+        <>
+            <AppRouter />
+        </>
+    )
 }
 
 export default App
