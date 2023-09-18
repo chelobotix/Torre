@@ -27,6 +27,7 @@ module.exports = {
     plugins: ['react'],
     ignorePatterns: ['.eslintrc.cjs', 'vite.config.ts'],
     rules: {
-        "eslint@typescript-eslint/strict-boolean-expressions": "off"
+        'eslint@typescript-eslint/strict-boolean-expressions': 'off',
+        'react/prop-types': 'off',
     },
 }
