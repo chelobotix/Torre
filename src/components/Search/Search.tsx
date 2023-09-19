@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react'
 import { userFetcher } from '../../api/userFetcher'
 import { v4 as uuidv4 } from 'uuid'
 import { type IUser } from '../../interfaces/userInterface'
+import style from './Search.module.css'
 
 const Search: React.FC = () => {
     const [search, setSearch] = useState<string>('')
@@ -30,7 +31,13 @@ const Search: React.FC = () => {
     return (
         <div>
             <input type="text" value={search} onChange={handleSearch} />
-            {isLoading && <p>loading.!!!!!</p>}
+            {isLoading && (
+                <div className={`${style.loaderContainer}`}>
+                    <div className={`${style.loader}`}>
+                        <div className={`${style.loaderBar}`}></div>
+                    </div>
+                </div>
+            )}
             <div>
                 <ul>
                     {users === null ? (
