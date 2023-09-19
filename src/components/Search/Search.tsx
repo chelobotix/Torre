@@ -2,7 +2,6 @@ import { useState, useEffect, useRef } from 'react'
 import { userFetcher } from '../../api/userFetcher'
 import { v4 as uuidv4 } from 'uuid'
 import { type IUser } from '../../interfaces/userInterface'
-import style from './Search.module.css'
 import { UserCard } from '../UserCard/UserCard'
 import { SearchResult } from '../SearchResult/SearchResult'
 import { Loader } from '../Loader/Loader'
@@ -24,7 +23,6 @@ const initialState: ISearch = {
 const Search: React.FC = () => {
     const [search, setSearch] = useState<ISearch>(initialState)
     const firstRenderRef = useRef(true)
-    console.log(search.users)
 
     const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
         setSearch((prev) => ({ ...prev, isLoading: true, text: e.target.value }))
@@ -32,7 +30,7 @@ const Search: React.FC = () => {
 
     const handleSearchKeyDown = (e: React.KeyboardEvent<HTMLInputElement>): void => {
         if (e.key === 'Enter') {
-            console.log('You pressed the escape key!')
+            setSearch((prev) => ({ ...prev, result: search.users }))
         }
     }
 

@@ -10,6 +10,10 @@ const UserCard: React.FC<IUser> = (user) => {
             <div>{user.imageUrl === null ? user.name[0] : <img src={user.imageUrl} alt="" width={'100px'} />}</div>
             <p>{user.name}</p>
             <p>{user.professionalHeadline}</p>
+            <div>
+                <button>Message</button>
+                <button>Signal</button>
+            </div>
         </li>
     )
 }
