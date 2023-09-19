@@ -5,12 +5,19 @@ import { type IUser } from '../../interfaces/userInterface'
 import { UserCard } from '../UserCard/UserCard'
 import { SearchResult } from '../SearchResult/SearchResult'
 import { Loader } from '../Loader/Loader'
+import { HandleLocalStorage } from '../../helper/LocalStorage'
+import { QueryHistory } from '../QueryHistory/QueryHistory'
+import { getDate } from '../../helper/getDate'
+
+const userLocalStorage = new HandleLocalStorage('users')
+const aux = userLocalStorage.getData()
 
 interface ISearch {
     text: string
     users: IUser[] | null
     isLoading: boolean
     result: IUser[] | null
+    history: string[]
 }
 
 const initialState: ISearch = {
@@ -18,6 +25,10 @@ const initialState: ISearch = {
     users: [],
     isLoading: false,
     result: [],
+    history: [],
+}
+if (Array.isArray(aux)) {
+    initialState.history = [...aux]
 }
 
 const Search: React.FC = () => {
@@ -30,11 +41,13 @@ const Search: React.FC = () => {
 
     const handleSearchKeyDown = (e: React.KeyboardEvent<HTMLInputElement>): void => {
         if (e.key === 'Enter') {
-            setSearch((prev) => ({ ...prev, result: search.users }))
+            const query = `${search.text} on ${getDate()}`
+            setSearch((prev) => ({ ...prev, result: search.users, history: [...search.history, query] }))
         }
     }
 
     useEffect(() => {
+        userLocalStorage.setData(search.history)
         if (firstRenderRef.current) {
             firstRenderRef.current = false
         } else {
@@ -45,11 +58,18 @@ const Search: React.FC = () => {
             }
             void userFetcher('https://torre.ai/api/entities/_searchStream', queryObj, setSearch)
         }
-    }, [search.text])
+    }, [search.text, search.history])
     return (
         <div>
             <input type="text" value={search.text} onChange={handleSearchChange} onKeyDown={handleSearchKeyDown} />
             {search.isLoading && <Loader />}
+            <div>
+                <ul>
+                    {search.history.map((query) => (
+                        <QueryHistory key={uuidv4()} query={query} />
+                    ))}
+                </ul>
+            </div>
             <div>
                 <ul>
                     {search.users !== null
