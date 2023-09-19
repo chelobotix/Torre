@@ -1,9 +1,12 @@
+import torre from '../../assets/torre.svg'
+import hamburguer from '../../assets/hamburguer.svg'
+
 const Header: React.FC = () => {
     return (
-        <div className="flex">
-            <div className="flex">
-                <p>Hamburguer</p>
-                <p>Torre.ai</p>
+        <div className="flex px-2 h-14">
+            <div className="flex gap-2">
+                <img src={hamburguer} alt="" width="20px" />
+                <img src={torre} alt="" width="130px" />
             </div>
             <ul className="hidden md:flex">
                 <li>search</li>

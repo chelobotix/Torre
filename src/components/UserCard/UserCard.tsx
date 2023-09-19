@@ -5,14 +5,14 @@ import { AiFillHeart } from 'react-icons/ai'
 
 const UserCard: React.FC<IUser> = (user) => {
     return (
-        <li key={uuidv4()} className="flex flex-col bg-slate-700 p-1">
+        <li key={uuidv4()} className="flex flex-col bg-slate-700 px-2 py-1">
             <div className="self-end">
                 <AiFillHeart size={20} style={{ color: '#cddc39' }} />
             </div>
             <Link to={`https://torre.ai/${user.username}`}>
                 <div className="pentagon w-10 min-w-[80px] bg-gray-600 flex justify-center p-1">
                     {user.imageUrl === null ? (
-                        user.name[0]
+                        <p className="pentagon text-lg text-white p-4">{user.name[0]}</p>
                     ) : (
                         <img src={user.imageUrl} alt="user_img" className="pentagon w-[65px]" />
                     )}

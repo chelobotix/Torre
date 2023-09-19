@@ -10,6 +10,7 @@ const AppRouter: React.FC = () => {
         <BrowserRouter>
             <div className="mainContainer">
                 <Header />
+                <hr className="h-px my-2 bg-gray-200 border-0 dark:bg-gray-700"></hr>
                 <Routes>
                     <Route index element={<Home />} />
                     <Route path="home" element={<Home />} />
