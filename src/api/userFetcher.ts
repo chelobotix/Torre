@@ -15,7 +15,8 @@ interface IBody {
 const userFetcher = async (
     url: string,
     data: IBody,
-    setResult: React.Dispatch<React.SetStateAction<IUser[] | null>>
+    setResult: React.Dispatch<React.SetStateAction<IUser[] | null>>,
+    setIsLoading: React.Dispatch<React.SetStateAction<boolean>>
 ): Promise<any> => {
     // Define the request options, including method, headers, and body
     const requestOptions: RequestInit = {
@@ -40,6 +41,7 @@ const userFetcher = async (
         })
         .then((responseData) => {
             const result = joinObjects(responseData)
+            setIsLoading(false)
             setResult(result)
             return joinObjects(responseData) // You can return the data to the caller if needed
         })
