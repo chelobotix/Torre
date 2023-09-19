@@ -40,7 +40,7 @@ const Search: React.FC = () => {
 
     const handleSearchKeyDown = (e: React.KeyboardEvent<HTMLInputElement>): void => {
         if (e.key === 'Enter') {
-            const query = `${search.text}}`
+            const query = `${search.text}`
             setSearch((prev) => ({ ...prev, result: search.users, history: [query, ...search.history] }))
         }
     }
@@ -61,8 +61,8 @@ const Search: React.FC = () => {
     return (
         <div className="flex flex-col items-center mt-3">
             <h2>Recent search queries</h2>
-            <div className="bg-red-800 h-20 overflow-auto w-4/5 my-2 p-1">
-                <ul className="flex flex-wrap p-1">
+            <div className=" h-20 overflow-auto w-4/5 my-2 p-1">
+                <ul className="flex flex-wrap justify-center p-1 gap-1">
                     {search.history.map((query, index) => {
                         if (index < 10) {
                             return <QueryHistory key={uuidv4()} query={query} />
@@ -80,9 +80,9 @@ const Search: React.FC = () => {
                 className="text-white bg-black border-2 border-white rounded-2xl w-4/5 p-2"
             />
             {search.isLoading && <Loader />}
-
-            <div>
-                <ul>
+            {}
+            <div className={search.isLoading ? 'hidden' : 'flex justify-center'}>
+                <ul className="flex flex-col bg-slate-500 w-4/5">
                     {search.users !== null
                         ? search.users.map((user: IUser) => {
                               return <SearchResult key={uuidv4()} {...user} />

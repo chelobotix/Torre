@@ -3,10 +3,6 @@ interface IQueryHistoryProps {
 }
 
 const QueryHistory: React.FC<IQueryHistoryProps> = ({ query }) => {
-    return (
-        <li>
-            <p>{query}</p>
-        </li>
-    )
+    return <li className="bg-slate-400 py-1 px-2 rounded-xl">{query}</li>
 }
 export { QueryHistory }
