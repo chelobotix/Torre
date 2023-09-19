@@ -26,8 +26,14 @@ const Search: React.FC = () => {
     const firstRenderRef = useRef(true)
     console.log(search.users)
 
-    const handleSearch = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
         setSearch((prev) => ({ ...prev, isLoading: true, text: e.target.value }))
+    }
+
+    const handleSearchKeyDown = (e: React.KeyboardEvent<HTMLInputElement>): void => {
+        if (e.key === 'Enter') {
+            console.log('You pressed the escape key!')
+        }
     }
 
     useEffect(() => {
@@ -44,16 +50,20 @@ const Search: React.FC = () => {
     }, [search.text])
     return (
         <div>
-            <input type="text" value={search.text} onChange={handleSearch} />
+            <input type="text" value={search.text} onChange={handleSearchChange} onKeyDown={handleSearchKeyDown} />
             {search.isLoading && <Loader />}
             <div>
                 <ul>
-                    {search.users === null
-                        ? null
-                        : search.users.map((user: IUser) => {
+                    {search.users !== null
+                        ? search.users.map((user: IUser) => {
                               return <SearchResult key={uuidv4()} {...user} />
-                          })}
+                          })
+                        : null}
                 </ul>
+            </div>
+            <hr />
+            <div>
+                {search.result !== null ? search.result.map((user) => <UserCard key={uuidv4()} {...user} />) : null}
             </div>
         </div>
     )
