@@ -3,7 +3,7 @@ import type React from 'react'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import { Home } from '../pages/Home/Home'
 import { Users } from '../pages/Users/Users'
-import { Error404 } from '../pages/404/error404'
+import { Error404 } from '../pages/404/Error404'
 
 const AppRouter: React.FC = () => {
     return (
