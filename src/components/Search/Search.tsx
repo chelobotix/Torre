@@ -11,6 +11,7 @@ interface ISearch {
     users: IUser[] | null
     isLoading: boolean
     result: IUser[] | null
+    history: string[]
 }
 
 const initialState: ISearch = {
@@ -18,6 +19,7 @@ const initialState: ISearch = {
     users: [],
     isLoading: false,
     result: [],
+    history: [],
 }
 
 const Search: React.FC = () => {
@@ -30,7 +32,8 @@ const Search: React.FC = () => {
 
     const handleSearchKeyDown = (e: React.KeyboardEvent<HTMLInputElement>): void => {
         if (e.key === 'Enter') {
-            setSearch((prev) => ({ ...prev, result: search.users }))
+            setSearch((prev) => ({ ...prev, result: search.users, history: [...search.history, search.text] }))
+            localStorage.setItem('users', JSON.stringify(search.history))
         }
     }
 
