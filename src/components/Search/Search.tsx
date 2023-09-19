@@ -5,6 +5,7 @@ import { type IUser } from '../../interfaces/userInterface'
 import style from './Search.module.css'
 import { UserCard } from '../UserCard/UserCard'
 import { SearchResult } from '../SearchResult/SearchResult'
+import { Loader } from '../Loader/Loader'
 
 interface ISearch {
     text: string
@@ -44,13 +45,7 @@ const Search: React.FC = () => {
     return (
         <div>
             <input type="text" value={search.text} onChange={handleSearch} />
-            {search.isLoading && (
-                <div className={`${style.loaderContainer}`}>
-                    <div className={`${style.loader}`}>
-                        <div className={`${style.loaderBar}`}></div>
-                    </div>
-                </div>
-            )}
+            {search.isLoading && <Loader />}
             <div>
                 <ul>
                     {search.users === null
