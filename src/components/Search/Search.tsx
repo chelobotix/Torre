@@ -7,7 +7,6 @@ import { SearchResult } from '../SearchResult/SearchResult'
 import { Loader } from '../Loader/Loader'
 import { HandleLocalStorage } from '../../helper/LocalStorage'
 import { QueryHistory } from '../QueryHistory/QueryHistory'
-import { getDate } from '../../helper/getDate'
 
 const userLocalStorage = new HandleLocalStorage('users')
 const aux = userLocalStorage.getData()
@@ -41,8 +40,8 @@ const Search: React.FC = () => {
 
     const handleSearchKeyDown = (e: React.KeyboardEvent<HTMLInputElement>): void => {
         if (e.key === 'Enter') {
-            const query = `${search.text} on ${getDate()}`
-            setSearch((prev) => ({ ...prev, result: search.users, history: [...search.history, query] }))
+            const query = `${search.text}}`
+            setSearch((prev) => ({ ...prev, result: search.users, history: [query, ...search.history] }))
         }
     }
 
@@ -60,16 +59,28 @@ const Search: React.FC = () => {
         }
     }, [search.text, search.history])
     return (
-        <div>
-            <input type="text" value={search.text} onChange={handleSearchChange} onKeyDown={handleSearchKeyDown} />
-            {search.isLoading && <Loader />}
-            <div>
-                <ul>
-                    {search.history.map((query) => (
-                        <QueryHistory key={uuidv4()} query={query} />
-                    ))}
+        <div className="flex flex-col items-center mt-3">
+            <h2>Recent search queries</h2>
+            <div className="bg-red-800 h-20 overflow-auto w-4/5 my-2 p-1">
+                <ul className="flex flex-wrap p-1">
+                    {search.history.map((query, index) => {
+                        if (index < 10) {
+                            return <QueryHistory key={uuidv4()} query={query} />
+                        }
+                        return null
+                    })}
                 </ul>
             </div>
+            <input
+                type="text"
+                value={search.text}
+                onChange={handleSearchChange}
+                onKeyDown={handleSearchKeyDown}
+                placeholder="search people by name"
+                className="text-white bg-black border-2 border-white rounded-2xl w-4/5 p-2"
+            />
+            {search.isLoading && <Loader />}
+
             <div>
                 <ul>
                     {search.users !== null

@@ -1,9 +1,11 @@
 const Header: React.FC = () => {
     return (
-        <div>
-            <p>Hamburguer</p>
-            <p>Torre.ai</p>
-            <ul>
+        <div className="flex">
+            <div className="flex">
+                <p>Hamburguer</p>
+                <p>Torre.ai</p>
+            </div>
+            <ul className="hidden md:flex">
                 <li>search</li>
                 <li>post a job</li>
                 <li>Search Jobs</li>

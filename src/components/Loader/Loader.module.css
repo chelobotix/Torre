@@ -1,9 +1,8 @@
 .loaderContainer {
-    background-color: black;
+    background-color: #cddc39;
 }
 
 .loader {
-    width: 500px;
     margin: 0 auto;
     border-radius: 10px;
     border: 4px solid transparent;
@@ -27,7 +26,7 @@
     right: 100%;
     bottom: 0;
     left: 0;
-    background: #fff;
+    background: #1a6304;
     width: 0;
     animation: borealisBar 2s linear infinite;
 }
