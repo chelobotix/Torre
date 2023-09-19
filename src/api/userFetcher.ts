@@ -34,7 +34,6 @@ const userFetcher = async (
         })
         .then((responseData) => {
             const result = joinObjects(responseData) // Convert response in JSON
-            console.log('resul', result)
             setSearch((prev) => ({ ...prev, isLoading: false, users: result }))
             return joinObjects(responseData)
         })

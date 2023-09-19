@@ -18,6 +18,7 @@ interface ISearch {
     isOnFocus: boolean
     result: IUser[] | null
     history: string[]
+    favorites: string[]
 }
 
 const initialState: ISearch = {
@@ -27,6 +28,7 @@ const initialState: ISearch = {
     isOnFocus: false,
     result: [],
     history: [],
+    favorites: [],
 }
 if (Array.isArray(aux)) {
     initialState.history = [...aux]
@@ -57,6 +59,10 @@ const Search: React.FC = () => {
         setSearch((prev) => ({ ...prev, history: [] }))
     }
 
+    const hideBoxSearch = (): void => {
+        setSearch((prev) => ({ ...prev, isOnFocus: false }))
+    }
+
     useEffect(() => {
         userLocalStorage.setData(search.history)
         if (firstRenderRef.current) {
@@ -71,7 +77,7 @@ const Search: React.FC = () => {
         }
     }, [search.text, search.history])
     return (
-        <div className="flex flex-col items-center mt-3">
+        <div onClick={hideBoxSearch} className="flex flex-col items-center mt-3">
             <h2 className="text-white">Recent search queries</h2>
             <div className="flex flex-col items-center h-auto w-4/5 my-2 p-1 max-w-xl">
                 <ul className="flex flex-wrap justify-center p-1 gap-1">

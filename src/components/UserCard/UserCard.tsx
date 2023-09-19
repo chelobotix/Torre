@@ -2,11 +2,33 @@ import { v4 as uuidv4 } from 'uuid'
 import { type IUser } from '../../interfaces/userInterface'
 import { Link } from 'react-router-dom'
 import { AiFillHeart } from 'react-icons/ai'
+import { HandleLocalStorage } from '../../helper/LocalStorage'
+
+const favoritesLS = new HandleLocalStorage('favorites')
+favoritesLS.setData([])
 
 const UserCard: React.FC<IUser> = (user) => {
+    const handleFavorites = (user: IUser): void => {
+        const favorite = {
+            name: user.name,
+            professionalHeadline: user.professionalHeadline,
+            image: user.imageUrl,
+            url: `https://torre.ai/${user.username}`,
+        }
+        const aux = favoritesLS.getData()
+        if (Array.isArray(aux)) {
+            aux.push(favorite)
+            favoritesLS.setData(aux)
+        }
+    }
     return (
         <li key={uuidv4()} className="flex flex-col bg-slate-700 px-2 py-1">
-            <div className="self-end">
+            <div
+                onClick={() => {
+                    handleFavorites(user)
+                }}
+                className="self-end"
+            >
                 <AiFillHeart size={20} style={{ color: '#cddc39' }} />
             </div>
             <Link to={`https://torre.ai/${user.username}`}>
