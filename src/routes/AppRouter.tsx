@@ -4,6 +4,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import { Home } from '../pages/Home/Home'
 import { Users } from '../pages/Users/Users'
 import { Error404 } from '../pages/404/Error404'
+import { Favorites } from '../pages/Favorites/Favorites'
 
 const AppRouter: React.FC = () => {
     return (
@@ -15,6 +16,7 @@ const AppRouter: React.FC = () => {
                     <Route index element={<Home />} />
                     <Route path="home" element={<Home />} />
                     <Route path="users" element={<Users />} />
+                    <Route path="favorites" element={<Favorites />} />
 
                     <Route path="error404" element={<Error404 />} />
                     <Route path="*" element={<Error404 />} />

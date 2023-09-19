@@ -4,9 +4,30 @@ import { Link } from 'react-router-dom'
 import { AiFillHeart } from 'react-icons/ai'
 
 const UserCard: React.FC<IUser> = (user) => {
+    const handleFavorites = (user: IUser): void => {
+        const favorite = {
+            name: user.name,
+            professionalHeadline: user.professionalHeadline,
+            image: user.imageUrl,
+            url: `https://torre.ai/${user.username}`,
+        }
+        let aux = localStorage.getItem('fav')
+        if (aux !== null) {
+            aux = JSON.parse(aux)
+        }
+        if (Array.isArray(aux)) {
+            aux.push(favorite)
+            localStorage.setItem('fav', JSON.stringify(aux))
+        }
+    }
     return (
         <li key={uuidv4()} className="flex flex-col bg-slate-700 px-2 py-1">
-            <div className="self-end">
+            <div
+                onClick={() => {
+                    handleFavorites(user)
+                }}
+                className="self-end"
+            >
                 <AiFillHeart size={20} style={{ color: '#cddc39' }} />
             </div>
             <Link to={`https://torre.ai/${user.username}`}>

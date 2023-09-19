@@ -15,16 +15,20 @@ interface ISearch {
     text: string
     users: IUser[] | null
     isLoading: boolean
+    isOnFocus: boolean
     result: IUser[] | null
     history: string[]
+    favorites: string[]
 }
 
 const initialState: ISearch = {
     text: '',
     users: [],
     isLoading: false,
+    isOnFocus: false,
     result: [],
     history: [],
+    favorites: [],
 }
 if (Array.isArray(aux)) {
     initialState.history = [...aux]
@@ -35,7 +39,7 @@ const Search: React.FC = () => {
     const firstRenderRef = useRef(true)
 
     const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-        setSearch((prev) => ({ ...prev, isLoading: true, text: e.target.value }))
+        setSearch((prev) => ({ ...prev, isLoading: true, text: e.target.value, isOnFocus: true }))
     }
 
     const handleSearchKeyDown = (e: React.KeyboardEvent<HTMLInputElement>): void => {
@@ -45,7 +49,7 @@ const Search: React.FC = () => {
                 ...prev,
                 result: search.users,
                 history: [query, ...search.history],
-                isLoading: true,
+                isOnFocus: false,
             }))
         }
     }
@@ -53,6 +57,10 @@ const Search: React.FC = () => {
     const deleteLocalStorage = (): void => {
         userLocalStorage.reset()
         setSearch((prev) => ({ ...prev, history: [] }))
+    }
+
+    const hideBoxSearch = (): void => {
+        setSearch((prev) => ({ ...prev, isOnFocus: false }))
     }
 
     useEffect(() => {
@@ -69,9 +77,9 @@ const Search: React.FC = () => {
         }
     }, [search.text, search.history])
     return (
-        <div className="flex flex-col items-center mt-3">
-            <h2 className="text-white">Recent search queries</h2>
-            <div className="flex flex-col items-center h-auto w-4/5 my-2 p-1 max-w-xl">
+        <div onClick={hideBoxSearch} className="flex flex-col items-center mt-3">
+            <div className="flex flex-col items-center h-auto w-4/5 my-2 p-1 max-w-xl border-2 border-lime-400">
+                <h2 className="text-white">Recent search queries</h2>
                 <ul className="flex flex-wrap justify-center p-1 gap-1">
                     {search.history.map((query, index) => {
                         if (index < 10) {
@@ -99,9 +107,9 @@ const Search: React.FC = () => {
             />
             {search.isLoading && <Loader />}
             {}
-            <div className={search.isLoading ? 'hidden' : 'flex justify-center w-4/5 max-w-xl'}>
+            <div className={search.isOnFocus ? 'flex justify-center w-4/5 max-w-xl' : 'hidden'}>
                 <ul className="flex flex-col bg-slate-500 w-full h-96 overflow-auto">
-                    {search.users !== null
+                    {search.users !== null && search.isOnFocus
                         ? search.users.map((user: IUser) => {
                               return <SearchResult key={uuidv4()} {...user} />
                           })
