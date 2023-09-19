@@ -15,6 +15,7 @@ interface ISearch {
     text: string
     users: IUser[] | null
     isLoading: boolean
+    isOnFocus: boolean
     result: IUser[] | null
     history: string[]
 }
@@ -23,6 +24,7 @@ const initialState: ISearch = {
     text: '',
     users: [],
     isLoading: false,
+    isOnFocus: false,
     result: [],
     history: [],
 }
@@ -35,7 +37,7 @@ const Search: React.FC = () => {
     const firstRenderRef = useRef(true)
 
     const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-        setSearch((prev) => ({ ...prev, isLoading: true, text: e.target.value }))
+        setSearch((prev) => ({ ...prev, isLoading: true, text: e.target.value, isOnFocus: true }))
     }
 
     const handleSearchKeyDown = (e: React.KeyboardEvent<HTMLInputElement>): void => {
@@ -45,7 +47,7 @@ const Search: React.FC = () => {
                 ...prev,
                 result: search.users,
                 history: [query, ...search.history],
-                isLoading: true,
+                isOnFocus: false,
             }))
         }
     }
@@ -99,9 +101,9 @@ const Search: React.FC = () => {
             />
             {search.isLoading && <Loader />}
             {}
-            <div className={search.isLoading ? 'hidden' : 'flex justify-center w-4/5 max-w-xl'}>
+            <div className={search.isOnFocus ? 'flex justify-center w-4/5 max-w-xl' : 'hidden'}>
                 <ul className="flex flex-col bg-slate-500 w-full h-96 overflow-auto">
-                    {search.users !== null
+                    {search.users !== null && search.isOnFocus
                         ? search.users.map((user: IUser) => {
                               return <SearchResult key={uuidv4()} {...user} />
                           })
