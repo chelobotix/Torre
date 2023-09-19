@@ -2,9 +2,9 @@ import { Search } from '../../components/Search/Search'
 
 const Home: React.FC = () => {
     return (
-        <div>
+        <main>
             <Search />
-        </div>
+        </main>
     )
 }
 export { Home }
