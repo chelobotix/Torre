@@ -1,5 +1,5 @@
+import { type ISearch } from '../components/Search/Search'
 import { joinObjects } from '../helper/joinObjects'
-import { type IUser } from '../interfaces/userInterface'
 
 interface IBody {
     query: string
@@ -15,40 +15,32 @@ interface IBody {
 const userFetcher = async (
     url: string,
     data: IBody,
-    setResult: React.Dispatch<React.SetStateAction<IUser[] | null>>,
-    setIsLoading: React.Dispatch<React.SetStateAction<boolean>>
+    setSearch: React.Dispatch<React.SetStateAction<ISearch>>
 ): Promise<any> => {
-    // Define the request options, including method, headers, and body
     const requestOptions: RequestInit = {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json', // Set the content type to JSON
-            // You can include other headers here if needed
+            'Content-Type': 'application/json',
         },
-        body: JSON.stringify(data), // Convert the data to a JSON string
+        body: JSON.stringify(data),
     }
 
-    // Make the POST request using fetch
     return await fetch(url, requestOptions)
         .then(async (response) => {
-            // Check if the response status is OK (status code 200)
             if (!response.ok) {
                 throw new Error(`HTTP error! Status: ${response.status}`)
             }
-
-            // Parse the JSON response and return it
-            return await response.text()
+            return await response.text() // response is not JSON
         })
         .then((responseData) => {
-            const result = joinObjects(responseData)
-            setIsLoading(false)
-            setResult(result)
-            return joinObjects(responseData) // You can return the data to the caller if needed
+            const result = joinObjects(responseData) // Convert response in JSON
+            console.log('resul', result)
+            setSearch((prev) => ({ ...prev, isLoading: false, users: result }))
+            return joinObjects(responseData)
         })
         .catch((error) => {
-            // Handle any errors that occurred during the fetch or parsing
             console.error('Fetch Error:', error)
-            throw error // You can rethrow the error or handle it as needed
+            throw error
         })
 }
 

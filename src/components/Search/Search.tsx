@@ -4,35 +4,47 @@ import { v4 as uuidv4 } from 'uuid'
 import { type IUser } from '../../interfaces/userInterface'
 import style from './Search.module.css'
 import { UserCard } from '../UserCard/UserCard'
+import { SearchResult } from '../SearchResult/SearchResult'
+
+interface ISearch {
+    text: string
+    users: IUser[] | null
+    isLoading: boolean
+    result: IUser[] | null
+}
+
+const initialState: ISearch = {
+    text: '',
+    users: [],
+    isLoading: false,
+    result: [],
+}
 
 const Search: React.FC = () => {
-    const [search, setSearch] = useState<string>('')
-    const [users, setUsers] = useState<IUser[] | null>(null)
-    const [isLoading, setIsLoading] = useState(false)
+    const [search, setSearch] = useState<ISearch>(initialState)
     const firstRenderRef = useRef(true)
-    console.log(users)
+    console.log(search.users)
 
     const handleSearch = (e: React.ChangeEvent<HTMLInputElement>): void => {
-        setIsLoading(true)
-        setSearch(e.target.value)
+        setSearch((prev) => ({ ...prev, isLoading: true, text: e.target.value }))
     }
 
     useEffect(() => {
         if (firstRenderRef.current) {
             firstRenderRef.current = false
         } else {
-            setIsLoading(true)
+            setSearch((prev) => ({ ...prev, isLoading: true }))
             const queryObj = {
-                query: search,
+                query: search.text,
                 limit: 20,
             }
-            void userFetcher('https://torre.ai/api/entities/_searchStream', queryObj, setUsers, setIsLoading)
+            void userFetcher('https://torre.ai/api/entities/_searchStream', queryObj, setSearch)
         }
-    }, [search])
+    }, [search.text])
     return (
         <div>
-            <input type="text" value={search} onChange={handleSearch} />
-            {isLoading && (
+            <input type="text" value={search.text} onChange={handleSearch} />
+            {search.isLoading && (
                 <div className={`${style.loaderContainer}`}>
                     <div className={`${style.loader}`}>
                         <div className={`${style.loaderBar}`}></div>
@@ -41,16 +53,14 @@ const Search: React.FC = () => {
             )}
             <div>
                 <ul>
-                    {users === null ? (
-                        <p>Loading...</p>
-                    ) : (
-                        users.map((user: IUser) => {
-                            return <UserCard key={uuidv4()} {...user} />
-                        })
-                    )}
+                    {search.users === null
+                        ? null
+                        : search.users.map((user: IUser) => {
+                              return <SearchResult key={uuidv4()} {...user} />
+                          })}
                 </ul>
             </div>
         </div>
     )
 }
-export { Search }
+export { Search, type ISearch }
