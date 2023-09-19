@@ -2,10 +2,6 @@ import { v4 as uuidv4 } from 'uuid'
 import { type IUser } from '../../interfaces/userInterface'
 import { Link } from 'react-router-dom'
 import { AiFillHeart } from 'react-icons/ai'
-import { HandleLocalStorage } from '../../helper/LocalStorage'
-
-const favoritesLS = new HandleLocalStorage('favorites')
-favoritesLS.setData([])
 
 const UserCard: React.FC<IUser> = (user) => {
     const handleFavorites = (user: IUser): void => {
@@ -15,10 +11,13 @@ const UserCard: React.FC<IUser> = (user) => {
             image: user.imageUrl,
             url: `https://torre.ai/${user.username}`,
         }
-        const aux = favoritesLS.getData()
+        let aux = localStorage.getItem('fav')
+        if (aux !== null) {
+            aux = JSON.parse(aux)
+        }
         if (Array.isArray(aux)) {
             aux.push(favorite)
-            favoritesLS.setData(aux)
+            localStorage.setItem('fav', JSON.stringify(aux))
         }
     }
     return (

@@ -78,8 +78,8 @@ const Search: React.FC = () => {
     }, [search.text, search.history])
     return (
         <div onClick={hideBoxSearch} className="flex flex-col items-center mt-3">
-            <h2 className="text-white">Recent search queries</h2>
-            <div className="flex flex-col items-center h-auto w-4/5 my-2 p-1 max-w-xl">
+            <div className="flex flex-col items-center h-auto w-4/5 my-2 p-1 max-w-xl border-2 border-lime-400">
+                <h2 className="text-white">Recent search queries</h2>
                 <ul className="flex flex-wrap justify-center p-1 gap-1">
                     {search.history.map((query, index) => {
                         if (index < 10) {
