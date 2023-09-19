@@ -3,6 +3,7 @@ import { userFetcher } from '../../api/userFetcher'
 import { v4 as uuidv4 } from 'uuid'
 import { type IUser } from '../../interfaces/userInterface'
 import style from './Search.module.css'
+import { UserCard } from '../UserCard/UserCard'
 
 const Search: React.FC = () => {
     const [search, setSearch] = useState<string>('')
@@ -44,7 +45,7 @@ const Search: React.FC = () => {
                         <p>Loading...</p>
                     ) : (
                         users.map((user: IUser) => {
-                            return <li key={uuidv4()}>{user.name}</li>
+                            return <UserCard key={uuidv4()} {...user} />
                         })
                     )}
                 </ul>
