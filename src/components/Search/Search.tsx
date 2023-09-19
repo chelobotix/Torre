@@ -61,7 +61,7 @@ const Search: React.FC = () => {
     return (
         <div className="flex flex-col items-center mt-3">
             <h2>Recent search queries</h2>
-            <div className=" h-20 overflow-auto w-4/5 my-2 p-1">
+            <div className=" h-auto w-4/5 my-2 p-1 max-w-xl">
                 <ul className="flex flex-wrap justify-center p-1 gap-1">
                     {search.history.map((query, index) => {
                         if (index < 10) {
@@ -77,12 +77,12 @@ const Search: React.FC = () => {
                 onChange={handleSearchChange}
                 onKeyDown={handleSearchKeyDown}
                 placeholder="search people by name"
-                className="text-white bg-black border-2 border-white rounded-2xl w-4/5 p-2"
+                className="text-white bg-black border-2 border-white rounded-2xl w-4/5 p-2 max-w-xl"
             />
             {search.isLoading && <Loader />}
             {}
-            <div className={search.isLoading ? 'hidden' : 'flex justify-center'}>
-                <ul className="flex flex-col bg-slate-500 w-4/5">
+            <div className={search.isLoading ? 'hidden' : 'flex justify-center w-4/5 max-w-xl'}>
+                <ul className="flex flex-col bg-slate-500 w-full h-96 overflow-auto">
                     {search.users !== null
                         ? search.users.map((user: IUser) => {
                               return <SearchResult key={uuidv4()} {...user} />
