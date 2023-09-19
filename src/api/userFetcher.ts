@@ -1,4 +1,5 @@
 import { joinObjects } from '../helper/joinObjects'
+import { type IUser } from '../interfaces/userInterface'
 
 interface IBody {
     query: string
@@ -11,7 +12,11 @@ interface IBody {
     excludeContacts?: boolean
 }
 
-const userFetcher = (url: string, data: IBody) => {
+const userFetcher = async (
+    url: string,
+    data: IBody,
+    setResult: React.Dispatch<React.SetStateAction<IUser[] | null>>
+): Promise<any> => {
     // Define the request options, including method, headers, and body
     const requestOptions: RequestInit = {
         method: 'POST',
@@ -23,20 +28,20 @@ const userFetcher = (url: string, data: IBody) => {
     }
 
     // Make the POST request using fetch
-    return fetch(url, requestOptions)
-        .then((response) => {
+    return await fetch(url, requestOptions)
+        .then(async (response) => {
             // Check if the response status is OK (status code 200)
             if (!response.ok) {
                 throw new Error(`HTTP error! Status: ${response.status}`)
             }
 
             // Parse the JSON response and return it
-            return response.text()
+            return await response.text()
         })
         .then((responseData) => {
-            // Handle the JSON response data here
-            joinObjects(responseData)
-            return responseData // You can return the data to the caller if needed
+            const result = joinObjects(responseData)
+            setResult(result)
+            return joinObjects(responseData) // You can return the data to the caller if needed
         })
         .catch((error) => {
             // Handle any errors that occurred during the fetch or parsing

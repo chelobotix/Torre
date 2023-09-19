@@ -1,8 +1,13 @@
-const joinObjects = (text: string): string[] => {
-    const userArray = text.split(/(?=[{])/g)
-    userArray.forEach((user, index) => {
-        userArray[index] = JSON.parse(userArray[index])
+import { type IUser } from '../interfaces/userInterface'
+
+const joinObjects = (text: string): IUser[] => {
+    const textArray: string[] | IUser[] = text.split(/(?=[{])/g)
+    const userArray: IUser[] = []
+    textArray.forEach((user, index) => {
+        userArray.push(JSON.parse(textArray[index]))
     })
+
+
     return userArray
 }
 

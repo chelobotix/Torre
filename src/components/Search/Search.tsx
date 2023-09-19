@@ -1,17 +1,24 @@
-import { useState, useEffect } from 'react'
-import { userFetcher } from '../../api/UserFetcher'
+import { useState, useEffect, useRef } from 'react'
+import { userFetcher } from '../../api/userFetcher'
+import { v4 as uuidv4 } from 'uuid'
+import { type IUser } from '../../interfaces/userInterface'
 
 const Search: React.FC = () => {
-    const [search, setSearch] = useState('')
-    const [result, setResult] = useState([])
-    console.log(search)
+    const [search, setSearch] = useState<string>('')
+    const [users, setUsers] = useState<IUser[] | null>(null)
+    const firstRenderRef = useRef(true)
+    console.log(users)
 
     useEffect(() => {
-        const queryObj = {
-            query: 'marcelo alarcon',
-            limit: 20,
+        if (firstRenderRef.current) {
+            firstRenderRef.current = false
+        } else {
+            const queryObj = {
+                query: search,
+                limit: 20,
+            }
+            void userFetcher('https://torre.ai/api/entities/_searchStream', queryObj, setUsers)
         }
-        userFetcher('https://torre.ai/api/entities/_searchStream', queryObj)
     }, [search])
     return (
         <div>
@@ -22,6 +29,17 @@ const Search: React.FC = () => {
                     setSearch(e.target.value)
                 }}
             />
+            <div>
+                <ul>
+                    {users === null ? (
+                        <p>Loading...</p>
+                    ) : (
+                        users.map((user: IUser) => {
+                            return <li key={uuidv4()}>{user.name}</li>
+                        })
+                    )}
+                </ul>
+            </div>
         </div>
     )
 }
