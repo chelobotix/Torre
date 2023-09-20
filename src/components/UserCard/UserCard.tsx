@@ -3,7 +3,6 @@ import { type IUser } from '../../interfaces/userInterface'
 import { Link } from 'react-router-dom'
 import { AiFillHeart } from 'react-icons/ai'
 import useLocalStorage from 'use-local-storage'
-import { useEffect } from 'react'
 
 interface IFavorites {
     name: string
@@ -17,8 +16,7 @@ interface UserCardProps {
 }
 
 const UserCard: React.FC<UserCardProps> = ({ user }) => {
-    const [, setFavorites] = useLocalStorage<IFavorites[]>('favorites', [])
-    const [, setTest] = useLocalStorage<string>('test', '')
+    const [favorites, setFavorites] = useLocalStorage<IFavorites[]>('favorites', [])
 
     const handleFavorites = (user: IUser): void => {
         const favorite: IFavorites = {
@@ -27,13 +25,8 @@ const UserCard: React.FC<UserCardProps> = ({ user }) => {
             image: user.imageUrl,
             url: `https://torre.ai/${user.username}`,
         }
-        setFavorites((prev) => [favorite, ...prev])
-        setTest('dsad')
+        setFavorites([favorite, ...favorites])
     }
-    useEffect(() => {
-        console.log('effect')
-        setTest('mono')
-    }, [])
 
     return (
         <li key={uuidv4()} className="flex flex-col bg-slate-700 px-2 py-1">

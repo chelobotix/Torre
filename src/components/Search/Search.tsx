@@ -40,7 +40,7 @@ const Search: React.FC = () => {
                 result: search.users,
                 isOnFocus: false,
             }))
-            setQueries((prev) => [search.text, ...prev])
+            setQueries([search.text, ...queries])
         }
     }
 
