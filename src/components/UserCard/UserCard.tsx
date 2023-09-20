@@ -2,24 +2,39 @@ import { v4 as uuidv4 } from 'uuid'
 import { type IUser } from '../../interfaces/userInterface'
 import { Link } from 'react-router-dom'
 import { AiFillHeart } from 'react-icons/ai'
+import useLocalStorage from 'use-local-storage'
+import { useEffect } from 'react'
 
-const UserCard: React.FC<IUser> = (user) => {
+interface IFavorites {
+    name: string
+    professionalHeadline: string
+    image: string
+    url: string
+}
+
+interface UserCardProps {
+    user: IUser
+}
+
+const UserCard: React.FC<UserCardProps> = ({ user }) => {
+    const [, setFavorites] = useLocalStorage<IFavorites[]>('favorites', [])
+    const [, setTest] = useLocalStorage<string>('test', '')
+
     const handleFavorites = (user: IUser): void => {
-        const favorite = {
+        const favorite: IFavorites = {
             name: user.name,
             professionalHeadline: user.professionalHeadline,
             image: user.imageUrl,
             url: `https://torre.ai/${user.username}`,
         }
-        let aux = localStorage.getItem('fav')
-        if (aux !== null) {
-            aux = JSON.parse(aux)
-        }
-        if (Array.isArray(aux)) {
-            aux.push(favorite)
-            localStorage.setItem('fav', JSON.stringify(aux))
-        }
+        setFavorites((prev) => [favorite, ...prev])
+        setTest('dsad')
     }
+    useEffect(() => {
+        console.log('effect')
+        setTest('mono')
+    }, [])
+
     return (
         <li key={uuidv4()} className="flex flex-col bg-slate-700 px-2 py-1">
             <div
@@ -52,4 +67,4 @@ const UserCard: React.FC<IUser> = (user) => {
         </li>
     )
 }
-export { UserCard }
+export { UserCard, type IFavorites }

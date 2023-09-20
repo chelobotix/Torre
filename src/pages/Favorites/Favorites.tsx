@@ -1,11 +1,11 @@
 import { Link } from 'react-router-dom'
 import { v4 as uuidv4 } from 'uuid'
+import useLocalStorage from 'use-local-storage'
+import { type IFavorites } from '../../components/UserCard/UserCard'
 
 const Favorites: React.FC = () => {
-    let favorites = localStorage.getItem('fav')
-    if (favorites !== null) {
-        favorites = JSON.parse(favorites)
-    }
+    const [favorites] = useLocalStorage<IFavorites[]>('favorites', [])
+
     return (
         <div className="flex flex-col items-center pl-10">
             <h2 className="text-white text-xl mb-3">Favorites</h2>

@@ -1,15 +1,12 @@
 import { useEffect, useRef, useState } from 'react'
 import { v4 as uuidv4 } from 'uuid'
 import { userFetcher } from '../../api/userFetcher'
-import { HandleLocalStorage } from '../../helper/LocalStorage'
 import { type IUser } from '../../interfaces/userInterface'
 import { Loader } from '../Loader/Loader'
 import { QueryHistory } from '../QueryHistory/QueryHistory'
 import { SearchResult } from '../SearchResult/SearchResult'
 import { UserCard } from '../UserCard/UserCard'
-
-const userLocalStorage = new HandleLocalStorage('users')
-const aux = userLocalStorage.getData()
+import useLocalStorage from 'use-local-storage'
 
 interface ISearch {
     text: string
@@ -17,8 +14,6 @@ interface ISearch {
     isLoading: boolean
     isOnFocus: boolean
     result: IUser[] | null
-    history: string[]
-    favorites: string[]
 }
 
 const initialState: ISearch = {
@@ -27,15 +22,11 @@ const initialState: ISearch = {
     isLoading: false,
     isOnFocus: false,
     result: [],
-    history: [],
-    favorites: [],
-}
-if (Array.isArray(aux)) {
-    initialState.history = [...aux]
 }
 
 const Search: React.FC = () => {
     const [search, setSearch] = useState<ISearch>(initialState)
+    const [queries, setQueries] = useLocalStorage<string[]>('queries', [])
     const firstRenderRef = useRef(true)
 
     const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
@@ -44,51 +35,45 @@ const Search: React.FC = () => {
 
     const handleSearchKeyDown = (e: React.KeyboardEvent<HTMLInputElement>): void => {
         if (e.key === 'Enter') {
-            const query = `${search.text}`
             setSearch((prev) => ({
                 ...prev,
                 result: search.users,
-                history: [query, ...search.history],
                 isOnFocus: false,
             }))
+            setQueries((prev) => [search.text, ...prev])
         }
     }
 
     const deleteLocalStorage = (): void => {
-        userLocalStorage.reset()
+        setQueries([])
         setSearch((prev) => ({ ...prev, history: [] }))
     }
 
-    const hideBoxSearch = (): void => {
-        setSearch((prev) => ({ ...prev, isOnFocus: false }))
-    }
-
     useEffect(() => {
-        userLocalStorage.setData(search.history)
         if (firstRenderRef.current) {
             firstRenderRef.current = false
         } else {
-            setSearch((prev) => ({ ...prev, isLoading: true }))
+            setSearch((prev) => ({ ...prev, isLoading: true, history: queries }))
             const queryObj = {
                 query: search.text,
                 limit: 20,
             }
             void userFetcher('https://torre.ai/api/entities/_searchStream', queryObj, setSearch)
         }
-    }, [search.text, search.history])
+    }, [search.text, queries])
     return (
-        <div onClick={hideBoxSearch} className="flex flex-col items-center mt-3">
+        <div className="flex flex-col items-center mt-3">
             <div className="flex flex-col items-center h-auto w-4/5 my-2 p-1 max-w-xl border-2 border-lime-400">
                 <h2 className="text-white">Recent search queries</h2>
                 <ul className="flex flex-wrap justify-center p-1 gap-1">
-                    {search.history.map((query, index) => {
+                    {queries.map((query, index) => {
                         if (index < 10) {
                             return <QueryHistory key={uuidv4()} query={query} />
                         }
                         return null
                     })}
                 </ul>
-                {search.history.length !== 0 && (
+                {queries.length !== 0 && (
                     <p
                         onClick={deleteLocalStorage}
                         className="bg-white text-black text-xs px-2 py-1 rounded-xl cursor-pointer"
@@ -118,7 +103,9 @@ const Search: React.FC = () => {
             </div>
             <div className="w-4/5 max-w-xl mt-3">
                 <ul className="flex flex-col gap-2">
-                    {search.result !== null ? search.result.map((user) => <UserCard key={uuidv4()} {...user} />) : null}
+                    {search.result !== null
+                        ? search.result.map((user) => <UserCard key={uuidv4()} user={user} />)
+                        : null}
                 </ul>
             </div>
         </div>
